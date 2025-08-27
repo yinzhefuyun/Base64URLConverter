@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>URL 编码/解码工具</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+    textarea {
+      width: 100%;
+      height: 35vh;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 20px;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+      margin: 5px 10px 15px 0;
+      cursor: pointer;
+    }
+    .label {
+      font-weight: bold;
+      margin: 10px 0 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <div class="label">原始文本 / URL 编码：</div>
+    <textarea id="inputText" wrap="soft" placeholder="输入 URL 或 普通字符串..."></textarea>
+    <button onclick="encodeURL()">编码</button>
+    <button onclick="decodeURL()">解码</button>
+    <button onclick="toggleWrap('inputText')">切换输入换行</button>
+	  <button onclick="toggleWrap('outputText')">切换输出换行</button>
+    <button onclick="openIndex()">返回首页</button>
+  </div>
+
+  <div>
+    <div class="label">结果：</div>
+    <textarea id="outputText" readonly wrap="soft" placeholder="编码或解码后的结果显示在这里..."></textarea>
+  </div>
+
+  <script>
+    function encodeURL() {
+      const input = document.getElementById('inputText').value;
+      try {
+        const encoded = encodeURIComponent(input);
+        document.getElementById('outputText').value = encoded;
+      } catch (e) {
+        document.getElementById('outputText').value = '编码失败：包含非法字符';
+      }
+    }
+
+    function decodeURL() {
+      const input = document.getElementById('inputText').value;
+      try {
+        const decoded = decodeURIComponent(input);
+        document.getElementById('outputText').value = decoded;
+      } catch (e) {
+        document.getElementById('outputText').value = '解码失败：输入不是合法的 URL 编码字符串';
+      }
+    }
+
+    function openIndex() {
+      //打开新窗口在新窗口打开首页
+      window.open('index.html', '_blank');
+    }
+
+    function toggleWrap(id) {
+      const textarea = document.getElementById(id);
+      if (textarea.getAttribute('wrap') === 'off') {
+        textarea.setAttribute('wrap', 'soft');
+        textarea.style.whiteSpace = 'pre-wrap';
+        textarea.style.overflowWrap = 'break-word';
+      } else {
+        textarea.setAttribute('wrap', 'off');
+        textarea.style.whiteSpace = 'pre';
+        textarea.style.overflowWrap = 'normal';
+      }
+    }
+  </script>
+
+</body>
+</html>
