@@ -39,19 +39,17 @@
 
   <div>
     <div class="label">Base64 URI 编码/解码工具</div>
-    <button onclick="openBase64()">Base64编解码</button>
-    <button onclick="openURI()">URL编解码</button>
+    <button onclick="openWeb('base64.html')">Base64编解码</button>
+    <button onclick="openWeb('URI.html')">URL编解码</button>
+    <button onclick="openWeb('https://yinzhefuyun.com/')">个人首页</button>
+    <button onclick="openWeb('https://github.com/yinzhefuyun/')">GitHub</button>
+
   </div>
 
   <script>
-    function openBase64() {
-      //打开新窗口在新窗口打开base64.html网页
-      window.open('base64.html', '_blank');
-    }
-
-    function openURI() {
-     //打开新窗口在新窗口打开URI.html网页
-     window.open('URI.html', '_blank');
+    function openWeb(url) {
+     //打开新窗口在新窗口打开网页
+     window.open(url, '_blank');
     }
   </script>
 
