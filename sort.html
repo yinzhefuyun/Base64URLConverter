@@ -43,6 +43,7 @@
   <div>
     <button onclick="sortByPinyin()">排序</button>
     <button onclick="copyResult()">复制结果</button>
+    <button onclick="openIndex()">返回首页</button>
   </div>
   
   <textarea id="outputText" placeholder="排序结果会显示在这里..." readonly></textarea>
@@ -68,6 +69,11 @@
       output.setSelectionRange(0, 99999); // 兼容移动端
       document.execCommand("copy");
       alert("结果已复制到剪贴板！");
+    }
+    
+    function openIndex() {
+      //打开新窗口在新窗口打开首页
+      window.open('index.html', '_blank');
     }
   </script>
 </body>
