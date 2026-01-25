@@ -44,6 +44,7 @@
     <button onclick="decodeURL()">解码</button>
     <button onclick="toggleWrap('inputText')">切换输入换行</button>
 	  <button onclick="toggleWrap('outputText')">切换输出换行</button>
+    <button onclick="formatParams()">格式化参数</button>
     <button onclick="openIndex()">返回首页</button>
   </div>
 
@@ -89,6 +90,17 @@
         textarea.style.whiteSpace = 'pre';
         textarea.style.overflowWrap = 'normal';
       }
+    }
+
+    function formatParams() {
+      const output = document.getElementById('outputText');
+      let val = output.value;
+      if (val.indexOf('\n&') !== -1) {
+        val = val.replace(/\n&/g, '&');
+      } else {
+        val = val.replace(/&/g, '\n&');
+      }
+      output.value = val;
     }
   </script>
 
