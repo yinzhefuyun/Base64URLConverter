@@ -41,6 +41,7 @@
   <div>
     <label><input type="checkbox" id="spaceCheckbox"> 开头添加空格</label>
     <label><input type="checkbox" id="newlineCheckbox" checked> 结尾添加换行</label>
+    <label><input type="checkbox" id="tabCheckbox" checked> 用4个空格替代制表符</label>
     <button onclick="processText()">处理</button>
     <button onclick="restoreText()">还原</button>
     <button onclick="copyResult()">复制结果</button>
@@ -53,48 +54,56 @@
 
 
     function processText() {
-      const input = document.getElementById("inputText").value;
+      let input = document.getElementById("inputText").value;
+      const tabSuffix = document.getElementById("tabCheckbox").checked;
+      if (tabSuffix) {
+        input = input.replace(/	/g, '    ');
+      }
       const lines = input.split('\n');
       const maxLength = Math.max(...lines.map(line => line.length)) + 1;
       const spacePrefix = document.getElementById("spaceCheckbox").checked;
-        const newlineSuffix = document.getElementById("newlineCheckbox").checked;
-        const result = lines.map(line => {
-          const padded = line.padEnd(maxLength, ' ');
-          let paddedStr;
-          if (spacePrefix && newlineSuffix) {
-            paddedStr = `" ${padded}\\n"`;
-          } else if (spacePrefix) {
-            paddedStr = `" ${padded}"`;
-          } else if (newlineSuffix) {
-            paddedStr = `"${padded}\\n"`;
-          } else {
-            paddedStr = `"${padded}"`;
-          }
-          return paddedStr;
-        }).join(' + \n') + ' ;';
+      const newlineSuffix = document.getElementById("newlineCheckbox").checked;
+      const result = lines.map(line => {
+      const padded = line.padEnd(maxLength, ' ');
+      let paddedStr;
+      if (spacePrefix && newlineSuffix) {
+        paddedStr = `" ${padded}\\n"`;
+      } else if (spacePrefix) {
+        paddedStr = `" ${padded}"`;
+      } else if (newlineSuffix) {
+        paddedStr = `"${padded}\\n"`;
+      } else {
+        paddedStr = `"${padded}"`;
+      }
+        return paddedStr;
+      }).join(' + \n') + ' ;';
       document.getElementById("outputText").value = result;
     }
 
     function restoreText() {
-       const input = document.getElementById("inputText").value;
-       const lines = input.split('\n');
-       const spacePrefix = document.getElementById("spaceCheckbox").checked;
-       const newlineSuffix = document.getElementById("newlineCheckbox").checked;
-       const result = lines.map(line => {
-         const match = line.match(/"([^"]*)"/);
-         if (match) {
-           let content = match[1];
-           if (newlineSuffix) {
-             content = content.replace(/\\n/, '');
-           }
-           if (spacePrefix) {
-             content = content.replace(/^ /, '');
-           }
-           return content.replace(/ +$/, '');
-         }
-         return '';
-       }).join('\n');
-       document.getElementById("outputText").value = result;
+      let input = document.getElementById("inputText").value;
+      const tabSuffix = document.getElementById("tabCheckbox").checked;
+      if (tabSuffix) {
+        input = input.replace(/	/g, '    ');
+      }
+      const lines = input.split('\n');
+      const spacePrefix = document.getElementById("spaceCheckbox").checked;
+      const newlineSuffix = document.getElementById("newlineCheckbox").checked;
+      const result = lines.map(line => {
+      const match = line.match(/"([^"]*)"/);
+      if (match) {
+        let content = match[1];
+        if (newlineSuffix) {
+          content = content.replace(/\\n/, '');
+        }
+        if (spacePrefix) {
+          content = content.replace(/^ /, '');
+        }
+        return content.replace(/ +$/, '');
+      }
+      return '';
+      }).join('\n');
+      document.getElementById("outputText").value = result;
      }
 
     function copyResult() {
