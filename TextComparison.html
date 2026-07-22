@@ -51,20 +51,16 @@
         });
 
         document.getElementById("prev").addEventListener("click", function (ev) {
-            ev.preventDefault();
             doc.scrollToDiff('prev');
             doc.options(doc.options());
         });
 
         document.getElementById("next").addEventListener("click", function (ev) {
-            ev.preventDefault();
             doc.scrollToDiff('next');
             doc.options(doc.options());
         });
 
         document.getElementById("wrap").addEventListener("click", function (ev) {
-            ev.preventDefault();
-            console.log(doc.options().wrap_lines);
             wrap = !doc.options().wrap_lines;
             doc.options({ wrap_lines: wrap });
             document.getElementById("wrap").textContent = wrap ? '¶' : '↲';
