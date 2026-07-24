@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文本比对</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .card { border: 1px solid #ddd; border-radius: 4px; background: #fff; }
-        .toolbar { display: flex; align-items: center; padding: 8px 16px; background: #f8f9fa; border-bottom: 1px solid #ddd; gap: 8px; }
+        /* ① .card 变成 flex 容器，自己占满整个视口 */
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;   /* 手机浏览器排除地址栏；不支持 dvh 的浏览器自动用上一行 */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* ② 工具栏：不伸不缩，高度完全由内容决定（换行也不怕） */
+        .toolbar {
+            flex: none;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: #f8f9fa;
+        }
         .toolbar > div { flex: 1; text-align: center; }
+
+        /* ③ 编辑器：自动吃掉全部剩余空间 */
+        #compare {
+            flex: 1;          /* 替代原来的 calc(100vh - 70px) */
+            min-height: 0;    /* 必写！否则内容一多会撑破容器 */
+        }
 
         .btn { padding: 6px 12px; font-size: 14px; border: 1px solid #6c757d; border-radius: 4px; background: #6c757d; color: #fff; cursor: pointer; }
         .btn:hover { background: #5a6268; }
@@ -23,7 +46,7 @@
         input[type="file"]::-webkit-file-upload-button:hover { background: #5a6268; }
     </style>
     <link href="css/mergely.css" rel="stylesheet" media="all" />
-    <script src="js/mergely.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mergely/5.4.6/mergely.min.js"></script>
 </head>
 
 <body>
@@ -37,27 +60,35 @@
             </div>
             <div><input type="file" class="btn" id="rhsFile"></div>
         </div>
-        <div id="compare1" style="height: calc(100vh - 70px)"></div>
+        <div id="compare"></div>
     </div>
 </body>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const doc = new Mergely('#compare1', {
+        const doc = new Mergely('#compare', {
             width: 'auto',
             license: 'lgpl-separate-notice',
-            lhs: setValue => setValue('旧文件'),
-            rhs: setValue => setValue('新文件'),
+            lhs: setValue => setValue(`旧文件
+
+旧文件
+
+旧文件
+`),
+            rhs: setValue => setValue(`新文件
+
+新文件
+
+新文件
+`),
         });
 
         document.getElementById("prev").addEventListener("click", function (ev) {
             doc.scrollToDiff('prev');
-            doc.options(doc.options());
         });
 
         document.getElementById("next").addEventListener("click", function (ev) {
             doc.scrollToDiff('next');
-            doc.options(doc.options());
         });
 
         document.getElementById("wrap").addEventListener("click", function (ev) {
@@ -78,10 +109,6 @@
     function handleFileInput(input, setEditorContent) {
         const file = input.files[0];
         if (!file) return;
-        if (file.size > 30 * 1024 * 1024) {
-            alert("上传内容不能大于 30 M！");
-            return;
-        }
         const reader = new FileReader();
         reader.onload = e => setEditorContent(e.target.result);
         reader.readAsText(file, "UTF-8");
